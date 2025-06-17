@@ -198,8 +198,8 @@ ROI: 1,567%
 
 ## 🔗 Links & Resources
 
-- **Live Demo:** [View A/B Testing Suite]((http://127.0.0.1:5500/main.html/index.html#))
-- **GitHub Repository:** [Source Code](https://github.com/httpsdevi/Landing-Page-A-B-Testing-Suite))
+- **Live Demo:** [View A/B Testing Suite](http://127.0.0.1:5500/main.html/index.html)
+- **GitHub Repository:** [Source Code](https://github.com/httpsdevi/Landing-Page-A-B-Testing-Suite/tree/main)
 - **Case Study:** [Detailed Analysis]((https://github.com/httpsdevi/Landing-Page-A-B-Testing-Suite/blob/main/case-study))
 
 
