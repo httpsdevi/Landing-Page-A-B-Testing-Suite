@@ -1,0 +1,134 @@
+/* Version B: Bold & Disruption-Focused */
+#version-b {
+    background: linear-gradient(45deg, #00ff88, #ff0088, #0088ff); /* Neon gradient */
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    transition: background 0.5s ease-in-out;
+}
+
+#version-b h1 {
+    font-size: 4.5rem; /* Larger, bolder */
+    margin-bottom: 25px;
+    line-height: 1.1;
+    font-weight: 900; /* Ultra bold */
+    color: #ffffff;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#version-b p.description {
+    font-size: 1.4rem; /* Larger description */
+    color: #f0f0f0;
+    margin-bottom: 50px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#version-b .feature-grid {
+    gap: 40px; /* Larger gap */
+    margin-top: 70px;
+    /* This overrides the default minmax from shared.css for version B features */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+#version-b .feature-card {
+    background: rgba(0, 0, 0, 0.4); /* Darker background */
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px; /* More rounded */
+    padding: 35px;
+    text-align: center; /* Center aligned content */
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+#version-b .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(0, 255, 136, 0.2) 0%, rgba(255, 0, 136, 0.2) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#version-b .feature-card:hover::before {
+    opacity: 1;
+}
+
+#version-b .feature-card:hover {
+    transform: scale(1.05); /* Pop effect */
+    background: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+#version-b .feature-card h3 {
+    font-size: 1.8rem; /* Larger feature title */
+    margin-bottom: 15px;
+    color: #00ff88; /* Neon green highlight */
+    position: relative;
+    z-index: 1;
+}
+
+#version-b .feature-card p {
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    position: relative;
+    z-index: 1;
+}
+
+#version-b .cta-button {
+    background: linear-gradient(90deg, #00ff88, #0088ff); /* Neon gradient button */
+    color: #0a0a0a;
+    padding: 18px 40px; /* Larger padding */
+    border-radius: 50px; /* Pill shape */
+    text-decoration: none;
+    font-size: 1.4rem; /* Larger font */
+    font-weight: 800; /* Extra bold */
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+    display: inline-flex; /* For arrow positioning */
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: relative;
+    overflow: hidden;
+}
+
+#version-b .cta-button::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: skewX(-20deg);
+    transition: all 0.4s ease;
+}
+
+#version-b .cta-button:hover::after {
+    left: 100%;
+}
+
+#version-b .cta-button:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 255, 136, 0.6);
+}
+
+@media (max-width: 480px) {
+    #version-b h1 {
+        font-size: 3rem;
+    }
+    #version-b p.description {
+        font-size: 1rem;
+    }
+    #version-b .cta-button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+}
