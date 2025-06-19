@@ -4,480 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A/B Testing Suite - SaaS Growth</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            background: #0a0a0a;
-            color: #ffffff;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Control Panel */
-        .control-panel {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(17, 17, 17, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            z-index: 1000;
-            min-width: 280px;
-        }
-
-        .control-panel h3 {
-            color: #00ff88;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-
-        .test-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .btn-control {
-            flex: 1;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 12px;
-        }
-
-        .btn-control:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-control.active {
-            background: #00ff88;
-            color: #000;
-            border-color: #00ff88;
-        }
-
-        .metrics {
-            font-size: 12px;
-            line-height: 1.4;
-        }
-
-        .metric-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            padding: 4px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .metric-label {
-            color: #888;
-        }
-
-        .metric-value {
-            color: #00ff88;
-            font-weight: 600;
-        }
-
-        /* Version A - Conservative/Professional */
-        .version-a {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-        }
-
-        .version-a .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            padding: 80px 0;
-        }
-
-        .version-a .hero-content h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(to right, #ffffff, #e0e7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.2;
-        }
-
-        .version-a .hero-content p {
-            font-size: 1.25rem;
-            color: #cbd5e1;
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .version-a .cta-button {
-            display: inline-block;
-            padding: 16px 32px;
-            background: #ffffff;
-            color: #1e40af;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 14px rgba(255, 255, 255, 0.15);
-        }
-
-        .version-a .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
-        }
-
-        /* Version B - Bold/Modern */
-        .version-b {
-            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .version-b::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 30% 20%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
-                        radial-gradient(circle at 70% 80%, rgba(255, 0, 136, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .version-b .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            text-align: left;
-            padding: 80px 0;
-            position: relative;
-            z-index: 2;
-        }
-
-        .version-b .hero-content h1 {
-            font-size: 4rem;
-            font-weight: 900;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(45deg, #00ff88, #ff0088, #0088ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.1;
-            text-transform: uppercase;
-            letter-spacing: -0.02em;
-        }
-
-        .version-b .hero-content p {
-            font-size: 1.3rem;
-            color: #888888;
-            margin-bottom: 2.5rem;
-            max-width: 500px;
-        }
-
-        .version-b .cta-button {
-            display: inline-block;
-            padding: 20px 40px;
-            background: linear-gradient(45deg, #00ff88, #0088ff);
-            color: #000000;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: all 0.4s ease;
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .version-b .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .version-b .cta-button:hover::before {
-            left: 100%;
-        }
-
-        .version-b .cta-button:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 0 50px rgba(0, 255, 136, 0.5);
-        }
-
-        /* Features Section (Shared) */
-        .features {
-            padding: 80px 0;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 30px;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(0, 255, 136, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .feature-card h3 {
-            color: #00ff88;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .feature-card p {
-            color: #cccccc;
-            line-height: 1.6;
-        }
-
-        /* Hide inactive version */
-        .landing-version {
-            display: none;
-        }
-
-        .landing-version.active {
-            display: block;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .control-panel {
-                position: relative;
-                top: 0;
-                right: 0;
-                margin: 20px;
-                min-width: auto;
-            }
-
-            .version-a .hero-content h1,
-            .version-b .hero-content h1 {
-                font-size: 2.5rem;
-            }
-
-            .version-b .hero {
-                text-align: center;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <!-- Link to external CSS files -->
+    <link rel="stylesheet" href="assets/css/shared.css">
+    <link rel="stylesheet" href="assets/css/version-a.css">
+    <link rel="stylesheet" href="assets/css/version-b.css">
+    <!-- Tailwind CSS CDN - kept here for utility classes if needed, though most styling is custom CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Import: Inter from Google Fonts (or similar for better performance) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Control Panel -->
     <div class="control-panel">
-        <h3>🧪 A/B Test Control</h3>
-        <div class="test-controls">
-            <button class="btn-control active" onclick="showVersion('a')">Version A</button>
-            <button class="btn-control" onclick="showVersion('b')">Version B</button>
+        <div class="control-group">
+            <label>Current Version</label>
+            <div class="control-buttons">
+                <button id="btn-a" class="btn-control active">Version A</button>
+                <button id="btn-b" class="btn-control">Version B</button>
+            </div>
         </div>
-        <div class="metrics">
-            <div class="metric-row">
-                <span class="metric-label">Current Version:</span>
-                <span class="metric-value" id="current-version">A</span>
+        <div class="control-group">
+            <label>Live Metrics</label>
+            <div class="metric-display">
+                <span>Version:</span> <strong id="current-version">A</strong>
             </div>
-            <div class="metric-row">
-                <span class="metric-label">Session Time:</span>
-                <span class="metric-value" id="session-time">0s</span>
+            <div class="metric-display">
+                <span>Session Time:</span> <strong id="session-time">0s</strong>
             </div>
-            <div class="metric-row">
-                <span class="metric-label">Page Views:</span>
-                <span class="metric-value" id="page-views">1</span>
+            <div class="metric-display">
+                <span>Page Views:</span> <strong id="page-views">1</strong>
             </div>
-            <div class="metric-row">
-                <span class="metric-label">Bounce Rate:</span>
-                <span class="metric-value" id="bounce-rate">0%</span>
+            <div class="metric-display">
+                <span>Bounce Rate:</span> <strong id="bounce-rate">--%</strong>
             </div>
-            <div class="metric-row">
-                <span class="metric-label">Conv. Rate:</span>
-                <span class="metric-value" id="conversion-rate">0%</span>
+            <div class="metric-display">
+                <span>Conversion Rate:</span> <strong id="conversion-rate">--%</strong>
             </div>
         </div>
     </div>
 
-    <!-- Version A: Conservative/Professional -->
-    <div id="version-a" class="landing-version active version-a">
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1>Grow Your Business with Confidence</h1>
-                    <p>Professional solutions designed to help established businesses scale efficiently and sustainably. Trusted by over 10,000 companies worldwide.</p>
-                    <a href="#" class="cta-button" onclick="trackConversion('a')">Start Free Trial</a>
+    <!-- Version A: Professional & Trust-Focused -->
+    <section id="version-a" class="landing-page-section active">
+        <div class="hero-content container">
+            <h1>Grow Your Business with Confidence</h1>
+            <p class="description">Professional solutions designed to help established businesses scale efficiently and sustainably. Trusted by over 10,000 companies worldwide.</p>
+            <a href="#" class="cta-button">Start Free Trial</a>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>Enterprise Security</h3>
+                    <p>Robust security protocols to protect your sensitive data and ensure compliance.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>24/7 Premium Support</h3>
+                    <p>Dedicated support team available around the clock to assist you with any issue.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Proven Results</h3>
+                    <p>Track record of success with measurable ROI for businesses of all sizes.</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="features">
-            <div class="container">
-                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 20px; color: #ffffff;">Why Choose Our Platform</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <h3>Enterprise Security</h3>
-                        <p>Bank-grade encryption and compliance with SOC 2 Type II standards ensure your data is always protected.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>24/7 Support</h3>
-                        <p>Our dedicated support team is available around the clock to help you succeed.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>Proven Results</h3>
-                        <p>Our clients see an average 127% increase in efficiency within the first 90 days.</p>
-                    </div>
+    <!-- Version B: Bold & Disruption-Focused -->
+    <section id="version-b" class="landing-page-section">
+        <div class="hero-content container">
+            <h1>Dominate Your Market</h1>
+            <p class="description">Stop playing it safe. Revolutionary growth tools that turn ambitious startups into market leaders. Join the disruption.</p>
+            <a href="#" class="cta-button">Claim Your Edge →</a>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>AI-Powered Growth</h3>
+                    <p>Leverage cutting-edge AI to automate tasks, optimize strategies, and accelerate growth.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Zero Limits Scaling</h3>
+                    <p>Designed for rapid expansion, our platform scales with you no matter how fast you grow.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>10x Results Guaranteed</h3>
+                    <p>Experience unprecedented improvements in performance and achieve your most ambitious goals.</p>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 
-    <!-- Version B: Bold/Modern -->
-    <div id="version-b" class="landing-version version-b">
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <h1>Dominate Your Market</h1>
-                    <p>Stop playing it safe. Revolutionary growth tools that turn ambitious startups into market leaders. Join the disruption.</p>
-                    <a href="#" class="cta-button" onclick="trackConversion('b')">Claim Your Edge →</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="features">
-            <div class="container">
-                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 20px; color: #ffffff;">Unleash Your Potential</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <h3>AI-Powered Growth</h3>
-                        <p>Next-gen algorithms that predict market trends and automate your path to exponential growth.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>Zero Limits</h3>
-                        <p>Scale infinitely with our cloud-native architecture. No caps, no restrictions, no compromises.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>10x Results</h3>
-                        <p>Companies using our platform achieve 10x faster growth than traditional methods. Period.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        // A/B Testing Analytics Simulation
-        let sessionStartTime = Date.now();
-        let pageViews = 1;
-        let interactions = 0;
-        let conversions = { a: 0, b: 0 };
-        let visits = { a: 0, b: 0 };
-        let currentVersion = 'a';
-
-        // Initialize metrics
-        visits.a = 1;
-
-        function showVersion(version) {
-            // Hide all versions
-            document.querySelectorAll('.landing-version').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.btn-control').forEach(btn => btn.classList.remove('active'));
-            
-            // Show selected version
-            document.getElementById(`version-${version}`).classList.add('active');
-            event.target.classList.add('active');
-            
-            currentVersion = version;
-            visits[version]++;
-            pageViews++;
-            
-            // Update metrics
-            updateMetrics();
-        }
-
-        function trackConversion(version) {
-            conversions[version]++;
-            interactions++;
-            
-            // Simulate redirect or modal
-            alert(`🎉 Conversion tracked for Version ${version.toUpperCase()}!\n\nIn a real implementation, this would:\n• Send data to your analytics platform\n• Redirect to signup/pricing page\n• Track the user through the funnel`);
-            
-            updateMetrics();
-        }
-
-        function updateMetrics() {
-            const sessionTime = Math.floor((Date.now() - sessionStartTime) / 1000);
-            const totalVisits = visits.a + visits.b;
-            const totalConversions = conversions.a + conversions.b;
-            const bounceRate = interactions === 0 ? 100 : Math.max(0, 100 - (interactions / totalVisits * 100));
-            const conversionRate = totalVisits > 0 ? (totalConversions / totalVisits * 100).toFixed(1) : 0;
-            
-            document.getElementById('current-version').textContent = currentVersion.toUpperCase();
-            document.getElementById('session-time').textContent = `${sessionTime}s`;
-            document.getElementById('page-views').textContent = pageViews;
-            document.getElementById('bounce-rate').textContent = `${bounceRate.toFixed(1)}%`;
-            document.getElementById('conversion-rate').textContent = `${conversionRate}%`;
-        }
-
-        // Track page interactions
-        document.addEventListener('scroll', () => {
-            interactions++;
-            updateMetrics();
-        }, { once: true });
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('btn-control') && !e.target.classList.contains('cta-button')) {
-                interactions++;
-                updateMetrics();
-            }
-        });
-
-        // Update session time every second
-        setInterval(updateMetrics, 1000);
-
-        // Simulate realistic test data after 3 seconds
-        setTimeout(() => {
-            visits.a += Math.floor(Math.random() * 50) + 25;
-            visits.b += Math.floor(Math.random() * 50) + 25;
-            conversions.a += Math.floor(Math.random() * 8) + 2;
-            conversions.b += Math.floor(Math.random() * 12) + 5;
-            interactions += Math.floor(Math.random() * 20) + 10;
-            updateMetrics();
-        }, 3000);
-    </script>
+    <!-- Link to external JavaScript files -->
+    <!-- metrics.js should load first as it defines global variables and functions used by others -->
+    <script src="assets/js/metrics.js"></script>
+    <!-- ab-test.js contains core A/B test logic that uses metrics -->
+    <script src="assets/js/ab-test.js"></script>
+    <!-- analytics.js for general interaction tracking -->
+    <script src="assets/js/analytics.js"></script>
 </body>
 </html>
